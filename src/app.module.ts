@@ -9,7 +9,7 @@ import {join} from 'path'; // New
 
 @Module({
     imports: [
-        ServeStaticModule.forRoot({rootPath: join(__dirname, '../', 'client/dist')}),
+        ServeStaticModule.forRoot({rootPath: join(__dirname,'../../client/dist')}),
         AuthModule,
         UsersModule,
         MongooseModule.forRoot('mongodb+srv://admin:2587889e@cluster0.0uly1.mongodb.net/root?retryWrites=true&w=majority'),
