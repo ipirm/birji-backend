@@ -12,7 +12,7 @@ import { join } from 'path'; // New
   imports: [
     // ServeStaticModule.forRoot({rootPath: join(__dirname, '..', 'client/dist')}),
       ServeStaticModule.forRoot({
-          rootPath: join(__dirname, '..', 'client/dist'),
+          rootPath: join(__dirname, '..', 'client'),
           exclude: ['/api*'],
       }),
       AuthModule,
