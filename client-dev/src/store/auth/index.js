@@ -40,7 +40,7 @@ export default {
     actions: {
         async LogIn({commit, dispatch}, user) {
             commit('SET_LOADING')
-            await apiRequest.post('auth/login', JSON.stringify(user)).then(resp => {
+            await apiRequest.post('auth/admin/login', JSON.stringify(user)).then(resp => {
                 const token = resp.data.access_token
                 localStorage.setItem('user-token', token)
                 commit('AUTH_SUCCESS', token)

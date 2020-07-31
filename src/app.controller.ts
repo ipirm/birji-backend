@@ -1,4 +1,4 @@
-import {Controller, Get, Request,Param, Post,Patch, UseGuards, Query} from '@nestjs/common';
+import {Controller, Get, Request, Param, Post, Patch, UseGuards, Query} from '@nestjs/common';
 import {JwtAuthGuard} from './auth/jwt-auth.guard';
 import {AuthService} from './auth/auth.service';
 import {UsersService} from './users/users.service';
@@ -16,6 +16,12 @@ export class AppController {
     @Post('auth/login')
     async login(@Request() req) {
         return this.authService.signIn(req.body);
+    }
+    @ApiOkResponse({description: '"access_token": "token"'})
+    @ApiBody({type: SignInDto})
+    @Post('auth/admin/login')
+    async loginAdmin(@Request() req) {
+        return this.authService.signAdminIn(req.body);
     }
 
     @ApiOkResponse({description: 'true'})
@@ -35,21 +41,25 @@ export class AppController {
     @ApiOkResponse({type: Array})
     @Get('users')
     getUsers(@Query() query) {
-        return this.usersService.findAllByChannelIdPaginated(query.page,query.per_page);
+        return this.usersService.findAllByChannelIdPaginated(query.page, query.per_page);
     }
 
-    @ApiOkResponse({ type: CreateUserDto})
+    @ApiOkResponse({type: CreateUserDto})
     @Get('/user/:id')
     async getUser(@Param() param) {
         return this.usersService.getUser(param.id)
     }
-    @ApiOkResponse({ description:'true'})
+
+    @ApiOkResponse({description: 'true'})
     @Post('/user')
     async deleteUser(@Request() req) {
         return this.usersService.deleteUser(req.body.id)
     }
-@Patch('/user/update')
-async updateUser(@Request() req) {
-    return this.usersService.updateUser(req.body)
-}
+
+    @ApiBody({type: CreateUserDto})
+    @ApiOkResponse({description: '"name": "example Name","email":"example-email,"role": "user" or "admin'})
+    @Patch('/user/update')
+    async updateUser(@Request() req) {
+        return this.usersService.updateUser(req.body)
+    }
 }

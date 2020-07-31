@@ -1,6 +1,7 @@
 <template>
     <layout-default>
         <form class="updateForm" v-if="user" @submit.prevent="updateUser">
+            <div class="form-title">Редактирование Пользователя</div>
             <md-field>
                 <label>Имя</label>
                 <md-input v-model="user.name"></md-input>
@@ -26,7 +27,7 @@
             </md-field>
             <md-checkbox v-model="user.subscribe">Подписка</md-checkbox>
             <div>
-                <md-button>Назад</md-button>
+                <md-button @click.stop="$router.go(-1)">Назад</md-button>
                 <md-button class="md-primary" type="submit">Сохранить</md-button>
             </div>
         </form>
@@ -42,22 +43,14 @@
         created() {
             this.getUser(this.$route.params.id)
         },
-        data: () => ({
-                name: 'name',
-                surname: '',
-                email: '',
-                password: '',
-                subscribe: '',
-                role: ""
-        }),
         name: "UserUpdate",
         methods: {
-            ...mapActions('user', ['getUser']),
-            updateUser(){
-              console.log(this.user)
+            ...mapActions('user', ['getUser', 'updateUserDto']),
+            updateUser() {
+                this.updateUserDto(this.user).then(()=>this.$router.push({path: '/users'}));
             }
         },
-        computed:{
+        computed: {
             ...mapState('user', ['user']),
         }
     }
@@ -68,5 +61,10 @@
         max-width: 500px;
         margin: auto;
         margin-top: 50px;
+    }
+    .form-title{
+        font-size: 20px;
+        text-align: center;
+        margin: 50px 0;
     }
 </style>

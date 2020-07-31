@@ -32,4 +32,18 @@ export class AuthService {
             access_token: this.jwtService.sign(payload),
         };
     }
+    async signAdminIn(@Body(ValidationPipe) signInDto: SignInDto): Promise<any> {
+
+        const user = await this.usersService.validateUser(signInDto.email, signInDto.password);
+        if (!user) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+        if(user.role !== 'admin'){
+            throw new UnauthorizedException('Not admin');
+        }
+        const payload = {name: user.name, role: user.role, email: user.email};
+        return {
+            access_token: this.jwtService.sign(payload),
+        };
+    }
 }
