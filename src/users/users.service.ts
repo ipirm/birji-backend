@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
-import {Model} from "mongoose";
+import {PaginateModel } from "mongoose";
 import {IUser} from "./interfaces/user.interface";
 import {CreateUserDto} from "./dto/create-user.dto";
 import * as bcrypt from 'bcrypt';
@@ -14,7 +14,7 @@ export type User = any;
 export class UsersService {
     private readonly users: User[];
 
-    constructor(@InjectModel('User') private readonly userModel: Model<IUser>) {
+    constructor(@InjectModel('User') private readonly userModel: PaginateModel<IUser>) {
     }
 
 
@@ -26,8 +26,13 @@ export class UsersService {
         return await createdUser.save();
     }
 
-    async find(id: string): Promise<IUser> {
-        return await this.userModel.findById(id).exec();
+    async find(createUserDto: CreateUserDto): Promise<any> {
+        const email = createUserDto.email
+        const user = await this.userModel.findOne({ email });
+        if(user){
+            return true
+        }
+        return false
     }
 
     async validateUser(email: string, password: string): Promise<any> {
@@ -37,5 +42,20 @@ export class UsersService {
         }
         const valid = await bcrypt.compare(password, user.password);
         return valid ? user : null;
+    }
+    async deleteUser(id: string): Promise<any>{
+         await this.userModel.findByIdAndDelete(id);
+        return true
+    }
+    async findAllByChannelIdPaginated(page: string, limit: string) {
+        const options = {
+            populate: [
+                // Your foreign key fields to populate
+            ],
+            page: Number(page),
+            limit: Number(limit),
+        };
+        // Get the data from database
+        return await this.userModel.paginate({}, options);
     }
 }

@@ -1,23 +1,25 @@
-import {Controller, Get, Request, Post, UseGuards} from '@nestjs/common';
+import {Controller, Get, Request, Post, UseGuards, Query} from '@nestjs/common';
 import {JwtAuthGuard} from './auth/jwt-auth.guard';
 import {AuthService} from './auth/auth.service';
-import {ApiBody, ApiCreatedResponse, ApiOkResponse} from "@nestjs/swagger";
+import {UsersService} from './users/users.service';
+import {ApiBody, ApiOkResponse} from "@nestjs/swagger";
 import {SignInDto} from "./users/dto/sign-in.dto";
 import {CreateUserDto} from "./users/dto/create-user.dto";
 
 @Controller()
 export class AppController {
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService, private usersService: UsersService) {
     }
 
     @ApiOkResponse({description: '"access_token": "token"'})
-    @ApiBody({type: SignInDto })
+    @ApiBody({type: SignInDto})
     @Post('auth/login')
     async login(@Request() req) {
         return this.authService.signIn(req.body);
     }
+
     @ApiOkResponse({description: 'true'})
-    @ApiBody({type: CreateUserDto })
+    @ApiBody({type: CreateUserDto})
     @Post('auth/signup')
     async signUp(@Request() req) {
         return this.authService.signUp(req.body);
@@ -26,7 +28,20 @@ export class AppController {
     @UseGuards(JwtAuthGuard)
     @ApiOkResponse({description: '"name": "example Name","email":"example-email,"role": "user" or "admin'})
     @Get('auth/profile')
-    getProfile(@Request() req) {
+    async getProfile(@Request() req) {
         return req.user;
+    }
+
+    @ApiOkResponse({type: Array})
+    @Get('users')
+    getUsers(@Query() query) {
+        return this.usersService.findAllByChannelIdPaginated(query.page,query.per_page);
+    }
+
+
+    @ApiOkResponse({ description:'true'})
+    @Post('/user')
+    async deleteUser(@Request() req) {
+        return this.usersService.deleteUser(req.body.id)
     }
 }
