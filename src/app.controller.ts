@@ -1,4 +1,4 @@
-import {Controller, Get, Request, Post, UseGuards, Query} from '@nestjs/common';
+import {Controller, Get, Request,Param, Post, UseGuards, Query} from '@nestjs/common';
 import {JwtAuthGuard} from './auth/jwt-auth.guard';
 import {AuthService} from './auth/auth.service';
 import {UsersService} from './users/users.service';
@@ -38,7 +38,11 @@ export class AppController {
         return this.usersService.findAllByChannelIdPaginated(query.page,query.per_page);
     }
 
-
+    @ApiOkResponse({ type: CreateUserDto})
+    @Get('/user/:id')
+    async getUser(@Param() param) {
+        return this.usersService.getUser(param.id)
+    }
     @ApiOkResponse({ description:'true'})
     @Post('/user')
     async deleteUser(@Request() req) {

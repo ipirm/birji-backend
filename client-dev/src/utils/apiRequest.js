@@ -2,11 +2,13 @@ import {API_URI} from "../config"
 import axios from 'axios'
 
 function headers() {
-    return {
-        headers: {
-            'Content-Type': 'application/json',
+    const token = localStorage.getItem('user-token')
+        return {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         }
-    }
 }
 
 // function headersFormData() {

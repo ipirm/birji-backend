@@ -1,23 +1,25 @@
 <template>
     <div class="login-page">
-        <form class="login-page-form">
-            <span class="login-page-title">Login Form</span>
+        <form class="login-page-form" @submit.prevent="logIn">
+            <span class="login-page-title">Войти</span>
             <md-field :class="messageClass">
-                <label>Email</label>
-                <md-input v-model="required" required></md-input>
+                <label>Мейл</label>
+                <md-input v-model="email" type="email" required></md-input>
                 <span class="md-error">There is an error</span>
             </md-field>
             <md-field :class="messageClass">
-                <label>Password</label>
+                <label>Пароль</label>
                 <md-input v-model="password" type="password" required></md-input>
                 <span class="md-error">There is an error</span>
             </md-field>
-            <md-button class="md-raised md-primary" @click="logIn">Login</md-button>
+            <md-button class="md-raised md-primary" type="submit">Войти</md-button>
         </form>
     </div>
 </template>
 
 <script>
+    import {mapActions} from "vuex";
+
     export default {
         name: "LoginPage",
         components: {},
@@ -26,12 +28,21 @@
             required: null,
             textarea: null,
             hasMessages: false,
-            password: ''
+            password: '',
+            email: ''
         }),
         methods: {
-          logIn(){
-                  this.$router.push({ path: '/users' })
-          }
+            ...mapActions('auth', ['LogIn']),
+            logIn() {
+                const {email, password} = this
+                this.$store.dispatch('auth/LogIn', {email, password})
+                    .then(() => {
+                        this.$router.push({path: '/users'})
+                    })
+                    .catch(() => {
+                        this.$router.push({path: '/login'})
+                    })
+            }
         },
         computed: {
             messageClass() {
@@ -67,7 +78,8 @@
             height: 400px;
             padding: 27px;
         }
-        .md-raised{
+
+        .md-raised {
             margin-top: 30px;
         }
     }

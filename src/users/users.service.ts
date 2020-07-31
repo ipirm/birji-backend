@@ -58,4 +58,8 @@ export class UsersService {
         // Get the data from database
         return await this.userModel.paginate({}, options);
     }
+    async getUser(id: string):Promise<any>{
+        const data = await this.userModel.findById(id);
+        return data
+    }
 }

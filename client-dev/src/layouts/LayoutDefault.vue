@@ -41,8 +41,11 @@
             }
         },
         methods:{
-            logout(){
-                this.$router.push({ path: '/login' })
+            logout: function () {
+                this.$store.dispatch('auth/logOut')
+                    .then(() => {
+                        this.$router.push('/login')
+                    })
             }
         }
     }

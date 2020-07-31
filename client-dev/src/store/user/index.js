@@ -26,6 +26,6 @@ export default {
         async deleteUser({commit}, id) {
             await apiRequest.post('user', JSON.stringify({id: id}))
             commit('DELETE_USER', id)
-        },
+        }
     }
 }
