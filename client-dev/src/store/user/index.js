@@ -6,7 +6,8 @@ export default {
     state: {
         users: [],
         pages: null,
-        total: null
+        total: null,
+        user: null
     },
 
     mutations: {
@@ -15,7 +16,10 @@ export default {
             state.pages = payload.pages
             state.total = payload.total
         },
-        DELETE_USER:(state, payload) => state.users = state.users.filter(i => i._id !== payload)
+        DELETE_USER:(state, payload) => state.users = state.users.filter(i => i._id !== payload),
+        SET_USER: (state, payload) => {
+            state.user = payload
+        }
     },
 
     actions: {
@@ -26,6 +30,10 @@ export default {
         async deleteUser({commit}, id) {
             await apiRequest.post('user', JSON.stringify({id: id}))
             commit('DELETE_USER', id)
+        },
+        async getUser({commit}, id) {
+            const data = await apiRequest.get(`user/${id}`)
+            commit('SET_USER', data.data)
         }
     }
 }

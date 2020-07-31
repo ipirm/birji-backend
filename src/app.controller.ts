@@ -1,4 +1,4 @@
-import {Controller, Get, Request,Param, Post, UseGuards, Query} from '@nestjs/common';
+import {Controller, Get, Request,Param, Post,Patch, UseGuards, Query} from '@nestjs/common';
 import {JwtAuthGuard} from './auth/jwt-auth.guard';
 import {AuthService} from './auth/auth.service';
 import {UsersService} from './users/users.service';
@@ -48,4 +48,8 @@ export class AppController {
     async deleteUser(@Request() req) {
         return this.usersService.deleteUser(req.body.id)
     }
+@Patch('/user/update')
+async updateUser(@Request() req) {
+    return this.usersService.updateUser(req.body)
+}
 }

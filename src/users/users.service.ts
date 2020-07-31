@@ -62,4 +62,13 @@ export class UsersService {
         const data = await this.userModel.findById(id);
         return data
     }
+    async updateUser(createUserDto: CreateUserDto) :Promise<any>{
+        const id = createUserDto._id
+        const data = await this.userModel.findById(id)
+        for (const [key, value] of Object.entries(createUserDto)) {
+            data[key] = value
+        }
+        data.save();
+        return data
+    }
 }

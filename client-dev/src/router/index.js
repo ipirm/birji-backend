@@ -5,6 +5,7 @@ import Vue from 'vue'
 
 const LoginPage = () => import(/* webpackChunkName: "login" */ '../pages/auth/LoginPage')
 const UserPage = () => import(/* webpackChunkName: "user" */ '../pages/users/UserPage')
+const UserUpdate = () => import(/* webpackChunkName: "userUpdate" */ '../pages/users/user/UserUpdate')
 
 
 Vue.use(VueRouter)
@@ -34,6 +35,11 @@ const router = new VueRouter({
         {
             path: '/users',
             component: UserPage,
+            beforeEnter: ifAuthenticated,
+        },
+        {
+            path: '/users/:id',
+            component: UserUpdate,
             beforeEnter: ifAuthenticated,
         }
     ]

@@ -17,7 +17,7 @@
                 <md-table-cell>{{ item.role }}</md-table-cell>
                 <md-table-cell>{{item.subscribe}}</md-table-cell>
                 <md-table-cell>
-                    <md-button class="md-icon-button">
+                    <md-button class="md-icon-button" @click.stop="updateUser(item)">
                         <md-icon>edit</md-icon>
                     </md-button>
                 </md-table-cell>
@@ -64,8 +64,10 @@
                     this.currentPage = this.currentPage+1
                     this.getUsers(this.currentPage)
                 }
+            },
+            updateUser(item){
+                this.$router.push(`/users/${item._id}`)
             }
-
         },
         computed:{
             ...mapState('user', ['users', 'pages','total']),
